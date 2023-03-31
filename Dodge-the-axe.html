@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Dodge the Axes!</title>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&display=swap">
+	<style>
+		body {
+			background-color: #eee;
+			cursor: none;
+		}
+		.title {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			background-color: rgba(255, 255, 255, 0.8);
+			padding: 20px;
+			border-radius: 10px;
+			box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+			font-size: 30px;
+			font-weight: bold;
+			text-align: center;
+			font-family: 'Space Grotesk', sans-serif;
+			z-index: 1;
+		}
+		.player {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			font-size: 50px;
+			z-index: 2;
+		}
+		.axe {
+			position: absolute;
+			top: -50px;
+			left: 50%;
+			transform: translate(-50%, 0);
+			font-size: 50px;
+			animation-name: fall;
+			animation-duration: 2s;
+			animation-timing-function: linear;
+			animation-iteration-count: infinite;
+			z-index: 2;
+		}
+		@keyframes fall {
+			0% {
+				top: -50px;
+			}
+			100% {
+				top: calc(100vh + 50px);
+			}
+		}
+	</style>
+</head>
+<body>
+	<div class="title">Dodge the Axes!</div>
+	<div class="player">😨</div>
+	<div class="axe">🪓</div>
+	<div class="axe">🪓</div>
+	<div class="axe">🪓</div>
+
+	<script>
+		let player = document.querySelector(".player");
+		let axes = document.querySelectorAll(".axe");
+
+		document.addEventListener("mousemove", function(event) {
+			let x = event.clientX;
+			let y = event.clientY;
+
+			player.style.left = x + "px";
+			player.style.top = y + "px";
+		});
+
+		let speed = 15;
+
+		function moveAxes() {
+			axes.forEach(axe => {
+				let axePosition = axe.offsetTop + speed;
+
+				if (axePosition > window.innerHeight) {
+					axePosition = -50;
+					axe.style.left = Math.random() * (window.innerWidth - 50) + "px";
+				}
+				axe.style.top = axePosition + "px";
+
+				let axeX = axe.offsetLeft;
+				let axeY = axe.offsetTop;
+				let playerX = player.offsetLeft;
+				let playerY = player.offsetTop;
+
+				if (Math.abs(axeX - playerX) < 50 && Math.abs(axeY - playerY) < 50) {
+					alert("Game Over! You were hit by an axe!");
+					location.reload();
+				}
+			});
+
+			requestAnimationFrame(moveAxes);
+		}
+
+		moveAxes();
+	</script>
+</body>
+</html>
